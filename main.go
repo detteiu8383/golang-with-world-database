@@ -43,13 +43,11 @@ func main() {
 
 func getCityHandler(c echo.Context) error {
 	cityName := c.Param("cityName")
-	fmt.Println(cityName)
 
-	var city City
-	if err := db.Get(&city, "SELECT * FROM city WHERE Name=?", cityName); errors.Is(err, sql.ErrNoRows) {
-		log.Printf("no such city Name=%s", cityName)
-	} else if err != nil {
-		log.Fatalf("DB Error: %s", err)
+	city := City{}
+	db.Get(&city, "SELECT * FROM city WHERE Name=?", cityName)
+	if !city.Name.Valid {
+		return c.NoContent(http.StatusNotFound)
 	}
 
 	return c.JSON(http.StatusOK, city)
