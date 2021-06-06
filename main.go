@@ -62,7 +62,7 @@ func postCityHandler(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("%+v", cityData))
 	}
-	_, err = db.NamedExec("INSERT INTO city (Name, CountryCode, District, Population) VALUES (:Name, :CountryCode, :District, :Population)", cityData)
+	_, err = db.Exec("INSERT INTO city (Name, CountryCode, District, Population) VALUES (:Name, :CountryCode, :District, :Population)", cityData)
 
 	if err != nil {
 		log.Fatalf("DB Error: %s", err)
