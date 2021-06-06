@@ -8,8 +8,6 @@ import (
 	"net/http"
 	"os"
 
-	"naro-server/go/pkg/mod/github.com/labstack/echo-contrib@v0.11.0/session"
-
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -62,6 +60,8 @@ func main() {
 	withLogin := e.Group("")
 	withLogin.Use(checkLogin)
 	withLogin.GET("/cities/:cityName", getCityHandler)
+	withLogin.POST("/cities", postCityHandler)
+	withLogin.GET("/me", getMeHandler)
 
 	e.Start(":13200")
 }
@@ -182,4 +182,8 @@ func postCityHandler(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 	return c.JSON(http.StatusOK, "added")
+}
+
+func getMeHandler(c echo.Context) error {
+	return c.String(http.StatusOK, fmt.Sprintf("%s", c.Get("userName")))
 }
